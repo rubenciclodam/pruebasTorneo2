@@ -1,0 +1,37 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 6 may 2023, 3:41:32
+    Author     : rubic
+
+.root { 
+    -fx-background-color: #111;
+    -fx-control-inner-background: gray;
+    -fx-control-inner-background-alt: lightgray;
+    -fx-background-image: url('sky.jpg');
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+}
+
+.label{
+ 	-fx-text-fill: #FFF;
+}
+
+#btn1 {
+	-fx-text-fill: darkgreen;
+}
+
+.negrita {
+	-fx-font-weight: bold;
+}
+*/
+
+#parteAltaIzq{
+    -fx-background-color: #00FF00;
+}
+
+#parteAltaDer{
+    -fx-background-color: #0000FF;
+}
