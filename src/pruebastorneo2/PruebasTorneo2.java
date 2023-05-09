@@ -15,9 +15,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.HPos;
 import static javafx.geometry.HPos.CENTER;
+import static javafx.geometry.HorizontalDirection.RIGHT;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import static javafx.geometry.Pos.TOP_CENTER;
 import javafx.geometry.VPos;
+import static javafx.geometry.VPos.BOTTOM;
 import static javafx.geometry.VPos.CENTER;
+import static javafx.geometry.VPos.TOP;
 import javafx.scene.Group;
 
 
@@ -26,12 +31,17 @@ import javafx.scene.control.Button;
 import static javafx.scene.control.ButtonBar.ButtonData.LEFT;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import static javafx.scene.text.TextAlignment.JUSTIFY;
+import static javafx.scene.text.TextAlignment.CENTER;
+import static javafx.scene.text.TextAlignment.LEFT;
 import javafx.stage.Stage;
 
 /**
@@ -53,10 +63,9 @@ public class PruebasTorneo2 extends Application {
     ArrayList<HBox> listaHBoxClasificacion=new ArrayList<HBox>();
     
     //Creo el contenedor y la Scene
-    Group root = new Group();
-    VBox contenedor = new VBox();   
-    ScrollBar sc = new ScrollBar();
-    Scene scene = new Scene(root, 400, 400);
+    StackPane root = new StackPane();
+    VBox contenedor = new VBox();
+    Scene scene = new Scene(root);
     
  
     
@@ -69,7 +78,15 @@ public class PruebasTorneo2 extends Application {
     VBox parteBajaIzq = new VBox();
     VBox parteBajaMedio = new VBox();
     VBox parteBajaDer = new VBox();
-
+    VBox zonaEnfrentamientos = new VBox();
+    VBox zonaClasificacion = new VBox();
+    ScrollPane spParticipantes = new ScrollPane();
+    ScrollPane spEnfrentamientos = new ScrollPane();
+    ScrollPane spClasificacion = new ScrollPane();
+    HBox cartelesClasificacion = new HBox();
+    HBox cartelesEnfrentamientos = new HBox();
+    
+    
     //Creo controles
     Button botonAgregar = new Button();
     Button botonEliminar = new Button();
@@ -79,7 +96,8 @@ public class PruebasTorneo2 extends Application {
     Label labelFijaParticipantes = new Label();
     Label labelNombresParticipantes = new Label();
     Label labelFijaEnfrentamientos = new Label();
-    Label labelFijaGanador = new Label();
+    Label cartelEnfrentamiento = new Label();
+    Label cartelGanador = new Label();
     Label labelFijaClasificacion = new Label();
     
     //pongo banderas para desactivar los botones
@@ -92,11 +110,12 @@ public class PruebasTorneo2 extends Application {
     @Override
     public void start(Stage primaryStage) {
                 
-        root.getChildren().addAll(contenedor, sc);
+        root.getChildren().addAll(contenedor);
               
-        //Edito controles
-        
+        //Edito controles        
         cuadroEscribirParticipantes.setPromptText("Escribe un nombre");
+        cuadroEscribirParticipantes.setPadding(new Insets(5));
+        
         
         botonAgregar.setText("Añadir participante");
         botonAgregar.setOnAction(new EventHandler<ActionEvent>() {            
@@ -149,7 +168,7 @@ public class PruebasTorneo2 extends Application {
                         hbox.getChildren().add(listaEtiquetas.get(i));
                         listaEtiquetas.get(i).setText("");
 
-                        parteBajaMedio.getChildren().add(hbox);
+                        zonaEnfrentamientos.getChildren().add(hbox);
                         listaHBox.add(hbox);
 
                     }
@@ -198,19 +217,8 @@ public class PruebasTorneo2 extends Application {
                 }
                 Collections.sort(listaParticipantesObjeto);
                            
-                //dibujo la parte de clasificación            
-                HBox cartelesClasificacion = new HBox();
-                Label cartelPosicion = new Label("PUESTO");
-                cartelesClasificacion.getChildren().add(cartelPosicion);    
 
-                Label cartelClasificados = new Label("NOMBRE");
-                cartelesClasificacion.getChildren().add(cartelClasificados); 
-
-                Label cartelVictorias = new Label("VICTORIAS");
-                cartelesClasificacion.getChildren().add(cartelVictorias);
-
-                parteBajaDer.getChildren().add(cartelesClasificacion);
-
+                //Dibujo los datos de clasificación
                 for (int i=0; i<listaParticipantesObjeto.size(); i++){
 
                     HBox hbox2 = new HBox();
@@ -227,7 +235,7 @@ public class PruebasTorneo2 extends Application {
                     victorias.setText(String.valueOf(listaParticipantesObjeto.get(i).getVictorias()));
                     hbox2.getChildren().add(victorias);                
 
-                    parteBajaDer.getChildren().add(hbox2);
+                    zonaClasificacion.getChildren().add(hbox2);
                     listaHBoxClasificacion.add(hbox2);
                 }                   
 
@@ -240,31 +248,79 @@ public class PruebasTorneo2 extends Application {
         
         
         cuadroEscribirParticipantes.setId("cuadroEscribirParticipantes");
-        cuadroEscribirParticipantes.setMaxSize(150,50);
-        cuadroEscribirParticipantes.setMinSize(150,50);
-        cuadroEscribirParticipantes.setPrefSize(150,50);
+        //cuadroEscribirParticipantes.setMaxSize(150,50);
+        //cuadroEscribirParticipantes.setMinSize(150,50);
+        //cuadroEscribirParticipantes.setPrefSize(150,50);
         
+        parteAltaDer.setAlignment(Pos.CENTER);
+        parteAltaDer.setSpacing(30);
+        parteAltaDer.setPadding(new Insets(15));
         
         labelFijaParticipantes.setText("PARTICIPANTES");
+        labelFijaParticipantes.getStyleClass().clear();
+        labelFijaParticipantes.getStyleClass().add("titulos");
         labelFijaParticipantes.setId("labelFijaParticipantes");
-        labelFijaParticipantes.setMaxSize(100, 40);
-        labelFijaParticipantes.setMinSize(80, 30);
-        labelFijaParticipantes.setPrefSize(100, 40);
+        //labelFijaParticipantes.setMaxSize(100, 40);
+        labelFijaParticipantes.setMinSize(200, 50);
+        //labelFijaParticipantes.setPrefSize(100, 40);
         //labelFijaParticipantes.setTranslateX(100);
         //labelFijaParticipantes.setTranslateY(100);
         //labelFijaParticipantes.setMaxSize(100, 40);
         
         labelNombresParticipantes.setId("labelNombresParticipantes");
-        labelNombresParticipantes.setMinSize(80, 30);
+        //labelNombresParticipantes.getStyleClass().clear();
+        //labelNombresParticipantes.getStyleClass().add("subtitulos");
+        //labelNombresParticipantes.setMinSize(80, 30);
         //labelNombresParticipantes.setPrefSize(100, 40);
         //labelNombresParticipantes.setTranslateX(100);
         //labelNombresParticipantes.setTranslateY(100);
         
         labelFijaEnfrentamientos.setText("ENFRENTAMIENTOS");
+        labelFijaEnfrentamientos.getStyleClass().clear();
+        labelFijaEnfrentamientos.getStyleClass().add("titulos");
         labelFijaEnfrentamientos.setId("labelFijaEnfrentamientos");
-        labelFijaEnfrentamientos.setMaxSize(200, 40);
-        labelFijaEnfrentamientos.setMinSize(80, 30);
-        labelFijaEnfrentamientos.setPrefSize(200, 40);
+        //labelFijaEnfrentamientos.setMaxSize(200, 40);
+        labelFijaEnfrentamientos.setMinSize(300, 30);
+       // labelFijaEnfrentamientos.setPrefSize(200, 40);
+        cartelesEnfrentamientos.getChildren().add(cartelEnfrentamiento);
+        cartelEnfrentamiento.setMinSize(200, 20);
+        cartelEnfrentamiento.setText("ENFRENTAMIENTO");
+        cartelEnfrentamiento.getStyleClass().clear();
+        cartelEnfrentamiento.getStyleClass().add("subtitulos");
+        cartelesEnfrentamientos.getChildren().add(cartelGanador);
+        cartelGanador.setMinSize(100, 20);
+        cartelGanador.setText("GANADOR");
+        cartelGanador.getStyleClass().clear();
+        cartelGanador.getStyleClass().add("subtitulos");
+        
+        
+        labelFijaClasificacion.setText("CLASIFICACIÓN");
+        labelFijaClasificacion.setId("labelFijaClasificacion");
+        labelFijaClasificacion.getStyleClass().clear();
+        labelFijaClasificacion.getStyleClass().add("titulos");
+        labelFijaClasificacion.setMinSize(300, 30);
+        Label cartelPosicion = new Label("PUESTO");
+        cartelPosicion.setTextAlignment(TextAlignment.LEFT);
+        cartelesClasificacion.getChildren().add(cartelPosicion);
+        cartelPosicion.setMinSize(70, 20);
+        cartelPosicion.getStyleClass().clear();
+        cartelPosicion.getStyleClass().add("subtitulos");
+        Label cartelClasificados = new Label("NOMBRE");
+        cartelClasificados.setTextAlignment(TextAlignment.LEFT);
+        cartelesClasificacion.getChildren().add(cartelClasificados);
+        cartelClasificados.setMinSize(150, 20);
+        cartelClasificados.setId("cartelClasificados");
+        cartelClasificados.getStyleClass().clear();
+        cartelClasificados.getStyleClass().add("subtitulos");
+        Label cartelVictorias = new Label("VICTORIAS");
+        cartelVictorias.setTextAlignment(TextAlignment.LEFT);
+        cartelesClasificacion.getChildren().add(cartelVictorias);
+        cartelVictorias.setMinSize(80, 20);
+        cartelVictorias.getStyleClass().clear();
+        cartelVictorias.getStyleClass().add("subtitulos");
+        
+        
+        
         
         //Asigno jerarquía de layouts
         contenedor.getChildren().add(parteAlta);
@@ -276,17 +332,32 @@ public class PruebasTorneo2 extends Application {
         parteBaja.getChildren().add(parteBajaDer);
         
         //Defino layouts
+        contenedor.setMinWidth(700);
+        //contenedor.setPrefWidth(600);
+        //contenedor.setMaxWidth(600);
         
-        contenedor.setMaxSize(400, 2000);
-        contenedor.setMinSize(400, 400);
+        //parteAltaIzq.setMaxSize(300, 80);
+        parteAltaIzq.setMinSize(400, 80);
+        //parteAltaIzq.setPrefSize(200, 80);
         
-        parteAltaIzq.setMaxSize(200, 80);
-        parteAltaIzq.setMinSize(200, 80);
-        parteAltaIzq.setPrefSize(200, 80);
+        //parteAltaDer.setMaxSize(300, 80);
+        parteAltaDer.setMinSize(400, 80);
+        //parteAltaDer.setPrefSize(200, 80);
         
-        parteAltaDer.setMaxSize(200, 80);
-        parteAltaDer.setMinSize(30, 20);
-        parteAltaDer.setPrefSize(200, 80);
+        //parteBajaIzq.setMaxSize(300, 80);
+        parteBajaIzq.setMinSize(100, 300);
+        //parteBajaIzq.setPrefSize(200, 80);
+        
+        //parteBajaMedio.setMaxSize(300, 80);
+        parteBajaMedio.setMinSize(300, 300);
+        //parteBajaMedio.setPrefSize(200, 80);
+        
+        //parteBajaDer.setMaxSize(300, 80);
+        parteBajaDer.setMinSize(200, 300);
+        //parteBajaDer.setPrefSize(200, 80);
+        
+        
+        
         
         //Añado controles a los layouts
         
@@ -296,49 +367,42 @@ public class PruebasTorneo2 extends Application {
         parteAltaDer.getChildren().addAll(botonClasificar);
         
         parteBajaIzq.getChildren().add(labelFijaParticipantes);
-        parteBajaIzq.getChildren().add(labelNombresParticipantes);
+        parteBajaIzq.getChildren().add(spParticipantes);
         
         parteBajaMedio.getChildren().add(labelFijaEnfrentamientos);
+        parteBajaMedio.getChildren().add(cartelesEnfrentamientos);
+        parteBajaMedio.getChildren().add(spEnfrentamientos);
         
         parteBajaDer.getChildren().add(labelFijaClasificacion);
+        parteBajaDer.getChildren().add(cartelesClasificacion);
+        parteBajaDer.getChildren().add(spClasificacion);       
         
-             
         
         
         //Ubico controles en layouts
         parteAltaIzq.setConstraints(botonAgregar, 0, 0); // column=2 row=0
         parteAltaIzq.setConstraints(botonEliminar, 1, 0);
         parteAltaIzq.setConstraints(cuadroEscribirParticipantes, 0, 1, 2, 1, HPos.CENTER, VPos.CENTER);
-        
-        
+        parteAltaIzq.setPadding(new Insets(10));
+        parteAltaIzq.setVgap(10);
+        parteAltaIzq.setHgap(10);
 
         // Estilos desde CSS	
         scene.getStylesheets().add(getClass().getResource("pruebasTorneo2.css").toExternalForm());
         parteAltaIzq.setId("parteAltaIzq");
         parteAltaDer.setId("parteAltaDer");
         
+        //Ajusto el scroll
+        spParticipantes.setContent(labelNombresParticipantes);
+        spParticipantes.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        spEnfrentamientos.setContent(zonaEnfrentamientos);
+        spEnfrentamientos.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);        
+        spClasificacion.setContent(zonaClasificacion);
+        spClasificacion.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);         
+        
         primaryStage.setTitle("Torneo");
         primaryStage.setScene(scene);
         
-        
-        //Ajusto el scroll
-        sc.setLayoutX(scene.getWidth()-sc.getWidth());
-        sc.setMin(0);
-        sc.setMax(800);  
-        sc.setOrientation(Orientation.VERTICAL);
-        //sc.setPrefHeight(400);
-        //double medida = Double.(String.valueOf(contenedor.getHeight()));
-        double medida = 400;
-        sc.setPrefHeight(medida);
-        
-        sc.valueProperty().addListener(new ChangeListener<Number>() {
-            public void changed(ObservableValue<? extends Number> ov,
-                Number old_val, Number new_val) {
-                    contenedor.setLayoutY(-new_val.doubleValue());
-            }
-        });
-        
-
         
         primaryStage.show();
 
